@@ -11,8 +11,6 @@ class YouTubeTimestampDJ {
   }
 
   init() {
-    console.log('YouTube Timestamp DJ: Content script loaded');
-
     // Wait for YouTube to load
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this.initializeExtension());
@@ -22,13 +20,10 @@ class YouTubeTimestampDJ {
   }
 
   initializeExtension() {
-    console.log('YouTube Timestamp DJ: Initializing extension');
-
     // Use MutationObserver to watch for video changes
     const observer = new MutationObserver(() => {
       const newVideoId = this.getVideoId();
       if (newVideoId && newVideoId !== this.videoId) {
-        console.log('YouTube Timestamp DJ: Video changed to:', newVideoId);
         this.videoId = newVideoId;
         this.loadTimestamps();
         this.findVideoElement();
@@ -42,7 +37,6 @@ class YouTubeTimestampDJ {
 
     // Initial setup
     this.videoId = this.getVideoId();
-    console.log('YouTube Timestamp DJ: Initial video ID:', this.videoId);
 
     if (this.videoId) {
       this.loadTimestamps();
@@ -54,7 +48,6 @@ class YouTubeTimestampDJ {
       if (!this.videoElement) {
         this.findVideoElement();
         if (this.videoElement) {
-          console.log('YouTube Timestamp DJ: Video element found via periodic check');
           clearInterval(checkVideoInterval);
         }
       }
@@ -65,7 +58,6 @@ class YouTubeTimestampDJ {
 
     // Listen for messages from popup
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      console.log('YouTube Timestamp DJ: Received message:', message.action);
       if (message.action === 'setTimestamp') {
         this.setTimestamp(message.key, message.time);
         sendResponse({ success: true });
@@ -78,7 +70,6 @@ class YouTubeTimestampDJ {
     });
 
     this.isInitialized = true;
-    console.log('YouTube Timestamp DJ: Extension initialized successfully');
   }
 
   getVideoId() {
@@ -105,7 +96,6 @@ class YouTubeTimestampDJ {
         this.videoElement = videos[0];
       }
     }
-    console.log('YouTube Timestamp DJ: Video element found:', !!this.videoElement, this.videoElement);
   }
 
   async loadTimestamps() {
@@ -131,20 +121,15 @@ class YouTubeTimestampDJ {
   }
 
   handleKeyPress(event) {
-    console.log('YouTube Timestamp DJ: Key pressed:', event.key);
-
     // Only handle keys QWERTYUIOP
     const key = event.key.toLowerCase();
     if (!['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'].includes(key)) {
       return;
     }
 
-    console.log('YouTube Timestamp DJ: Handling key:', key);
-
     // Don't trigger if user is typing in an input field
     if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' ||
         event.target.contentEditable === 'true') {
-      console.log('YouTube Timestamp DJ: Ignoring key - user is typing in input field');
       return;
     }
 
@@ -154,20 +139,12 @@ class YouTubeTimestampDJ {
   }
 
   jumpToTimestamp(key) {
-    console.log('YouTube Timestamp DJ: Jumping to timestamp for key:', key);
-    console.log('YouTube Timestamp DJ: Available timestamps:', this.timestamps);
-    console.log('YouTube Timestamp DJ: Video element exists:', !!this.videoElement);
-
     if (!this.timestamps[key] || !this.videoElement) {
-      console.log('YouTube Timestamp DJ: Cannot jump - missing timestamp or video element');
       return;
     }
 
     const timeInSeconds = this.convertTimeToSeconds(this.timestamps[key]);
-    console.log('YouTube Timestamp DJ: Converted time to seconds:', timeInSeconds);
-
     if (timeInSeconds !== null) {
-      console.log('YouTube Timestamp DJ: Setting video time to:', timeInSeconds);
       this.videoElement.currentTime = timeInSeconds;
       // Also update YouTube's progress bar if possible
       this.updateYouTubeProgress(timeInSeconds);
