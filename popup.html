@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YouTube Timestamp DJ</title>
+  <style>
+    body {
+      width: 350px;
+      padding: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      margin: 0;
+      background: #f9f9f9;
+    }
+
+    .container {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      margin: 0 0 15px 0;
+      font-size: 18px;
+      color: #333;
+      text-align: center;
+    }
+
+    .video-info {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .timestamp-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .key-label {
+      width: 30px;
+      font-weight: bold;
+      color: #ff0000;
+      text-align: center;
+    }
+
+    .time-input {
+      flex: 1;
+      padding: 5px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+      margin: 0 8px;
+    }
+
+    .set-current-btn {
+      padding: 5px 8px;
+      background: #ff0000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      transition: background-color 0.2s;
+    }
+
+    .set-current-btn:hover {
+      background: #cc0000;
+    }
+
+    .clear-all-btn {
+      width: 100%;
+      padding: 8px;
+      background: #666;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+
+    .clear-all-btn:hover {
+      background: #555;
+    }
+
+    .instructions {
+      margin-top: 15px;
+      padding: 10px;
+      background: #e8f4fd;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .not-youtube {
+      text-align: center;
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎵 YT Timestamp DJ</h1>
+
+    <div id="video-info" class="video-info" style="display: none;">
+      Current video: <span id="video-title">Loading...</span>
+    </div>
+
+    <div id="not-youtube" class="not-youtube" style="display: none;">
+      Navigate to a YouTube video to use this extension
+    </div>
+
+    <div id="timestamp-controls">
+      <div class="timestamp-row">
+        <div class="key-label">Q</div>
+        <input type="text" class="time-input" id="time-q" placeholder="0:00">
+        <button class="set-current-btn" data-key="q">Set Current</button>
+      </div>
+
+      <div class="timestamp-row">
+        <div class="key-label">W</div>
+        <input type="text" class="time-input" id="time-w" placeholder="0:00">
+        <button class="set-current-btn" data-key="w">Set Current</button>
+      </div>
+
+      <div class="timestamp-row">
+        <div class="key-label">E</div>
+        <input type="text" class="time-input" id="time-e" placeholder="0:00">
+        <button class="set-current-btn" data-key="e">Set Current</button>
+      </div>
+
+      <div class="timestamp-row">
+        <div class="key-label">R</div>
+        <input type="text" class="time-input" id="time-r" placeholder="0:00">
+        <button class="set-current-btn" data-key="r">Set Current</button>
+      </div>
+
+      <div class="timestamp-row">
+        <div class="key-label">T</div>
+        <input type="text" class="time-input" id="time-t" placeholder="0:00">
+        <button class="set-current-btn" data-key="t">Set Current</button>
+      </div>
+
+      <div class="timestamp-row">
+        <div class="key-label">Y</div>
+        <input type="text" class="time-input" id="time-y" placeholder="0:00">
+        <button class="set-current-btn" data-key="y">Set Current</button>
+      </div>
+
+      <div class="timestamp-row">
+        <div class="key-label">U</div>
+        <input type="text" class="time-input" id="time-u" placeholder="0:00">
+        <button class="set-current-btn" data-key="u">Set Current</button>
+      </div>
+
+      <div class="timestamp-row">
+        <div class="key-label">I</div>
+        <input type="text" class="time-input" id="time-i" placeholder="0:00">
+        <button class="set-current-btn" data-key="i">Set Current</button>
+      </div>
+
+      <div class="timestamp-row">
+        <div class="key-label">O</div>
+        <input type="text" class="time-input" id="time-o" placeholder="0:00">
+        <button class="set-current-btn" data-key="o">Set Current</button>
+      </div>
+
+      <div class="timestamp-row">
+        <div class="key-label">P</div>
+        <input type="text" class="time-input" id="time-p" placeholder="0:00">
+        <button class="set-current-btn" data-key="p">Set Current</button>
+      </div>
+
+      <button class="clear-all-btn" id="clear-all">Clear All Timestamps</button>
+    </div>
+
+    <div class="instructions">
+      <strong>How to use:</strong><br>
+      1. Enter timestamps (e.g., "1:23" or "1:23:45")<br>
+      2. Or click "Set Current" to use current video time<br>
+      3. Press keys QWERTYUIOP while watching to jump to timestamps<br>
+      4. Timestamps are saved per video
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
